@@ -1,0 +1,17 @@
+[main]
+type=HTML
+name=My Account
+begin=12
+date.column=B
+date.format=dd/MM/yyyy
+memo.column=F
+amount.column=8
+balance.column=J
+
+[categories]
+Cat1.Subcat1 = cat1\\.1
+Cat1.Subcat1 = c1\\.1
+Cat1.Others = cat1; c1
+^Cat1.Others = ${Cat1.Subcat1[0]}; ${Cat1.Subcat1[1]}
+Cat2.Subcat1 = cat2\\.1
+
