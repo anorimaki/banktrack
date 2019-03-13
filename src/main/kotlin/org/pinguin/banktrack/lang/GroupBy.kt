@@ -3,7 +3,7 @@ package org.pinguin.banktrack.lang
 
 
 interface Group<T> {
-    fun add( item: T ): Boolean
+    fun add( element: T ): Boolean
 }
 
 

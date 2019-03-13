@@ -8,7 +8,7 @@ class UnMergeableItemsException(msg: String): Exception(msg) {
         private val dateFormat = SimpleDateFormat("dd/MM/yyyy")
 
         fun becauseInvalidDateRanges( date: Calendar ) =
-                UnMergeableItemsException( "Can't merge items with dates from $${dateFormat.format(date.time)}" )
+                UnMergeableItemsException( "Can't merge items with dates from ${dateFormat.format(date.time)}" )
 
         fun becauseDifferentAccountName( name1: String, name2: String ) =
                 UnMergeableItemsException( "Can't merge items from account $name1 with account $name2" )

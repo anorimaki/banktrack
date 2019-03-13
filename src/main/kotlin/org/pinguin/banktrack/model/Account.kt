@@ -9,13 +9,7 @@ open class Account(val name: String,
     val mismatchingBalances: List<Pair<Transaction, Transaction>>
         get() = this.items.
                     zipWithNext().
-                    filter { pair ->
-                        val ret = pair.first.balance + pair.second.amount != pair.second.balance
-                        if ( ret ) {
-                            println("${pair.first.balance}, ${pair.second.amount} = ${pair.second.balance}")
-                        }
-                        ret
-                    }
+                    filter { pair ->  pair.first.balance + pair.second.amount != pair.second.balance }
 
     fun toMutable() = MutableAccount( name, items.toMutableList() )
 
