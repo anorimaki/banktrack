@@ -20,7 +20,7 @@ class Categories( private val categories: Collection<Category> ) {
             section.keys.forEach { key ->
                 val c = section.length(key)
                 val regexpSet = mutableSetOf<Regex>()
-                for( i in 0..(c-1) ) {
+                for( i in 0 until c) {
                     val value = section.fetch( key, i )
                     val currentRegexps = value.split(";").map { regExp -> Regex(regExp.trim()) }
                     regexpSet.addAll(currentRegexps)

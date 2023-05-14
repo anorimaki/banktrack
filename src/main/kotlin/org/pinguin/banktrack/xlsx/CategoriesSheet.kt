@@ -75,7 +75,10 @@ private class CategoriesSheetGenerator(private val sheet: Sheet,
 
         val rowsToSum = transactions
                 .filter { it.key != Categories.UNCLASSIFIED.name }
-                .map { createCategoryBlock(currentRow, it.key, it.value) }
+                .map {
+                    currentRow = createCategoryBlock(currentRow, it.key, it.value)
+                    currentRow - 1
+                }
                 .toMutableList()
 
         val unclassifiedTransactions = transactions[Categories.UNCLASSIFIED.name]
