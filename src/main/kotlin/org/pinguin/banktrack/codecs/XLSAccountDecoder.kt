@@ -49,6 +49,11 @@ class XLSAccountDecoder(private val structure: SourceStructure): AccountDecoder 
                 calendar.time = dateFormat.parse(cell.stringCellValue)
                 calendar
             }
+            CellType.NUMERIC -> {
+                val calendar = Calendar.getInstance()
+                calendar.time = cell.dateCellValue
+                calendar
+            }
             else -> throw Exception("Unexpected cell type")
         }
 }

@@ -2,19 +2,23 @@ package org.pinguin.banktrack.model
 
 import java.math.BigDecimal
 import java.util.*
-import sun.text.normalizer.UTF16.append
-import jdk.management.resource.internal.ApproverGroup.getGroup
-import jdk.nashorn.internal.objects.NativeDate.getTime
-
 
 
 data class Transaction(
-    val account: String,
-    val date: Calendar,
-    val memo: String,
-    val amount: BigDecimal,
-    val balance: BigDecimal,
-    val category: Category) {
+        val account: String,
+        val date: Calendar,
+        val memo: String,
+        val amount: BigDecimal,
+        val balance: BigDecimal,
+        val category: Category) {
+
+    fun equivalent(other: Transaction) =
+            (account == other.account) &&
+                    (date == other.date) &&
+                    (memo.lowercase(Locale.getDefault()) == other.memo.lowercase(Locale.getDefault())) &&
+                    (amount == other.amount) &&
+                    (balance == other.balance) &&
+                    (category == other.category)
 
     override fun toString(): String {
         val builder = StringBuilder()
@@ -29,10 +33,8 @@ data class Transaction(
     }
 }
 
-
-
 val Calendar.year: Int
-    get() = get( Calendar.YEAR )
+    get() = get(Calendar.YEAR)
 
 val Calendar.month: Int
-    get() = get( Calendar.MONTH )
+    get() = get(Calendar.MONTH)

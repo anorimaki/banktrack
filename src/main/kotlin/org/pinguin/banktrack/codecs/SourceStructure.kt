@@ -7,6 +7,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.util.*
 
 
 data class SourceStructure(val type: SourceType,
@@ -34,31 +35,32 @@ private const val AMOUNT_COLUMN_PROPERTY = "amount.column"
 private const val BALANCE_COLUMN_PROPERTY = "balance.column"
 
 
-class InvalidDefinitionException(message: String): Exception(message) {}
+class InvalidDefinitionException(message: String) : Exception(message) {}
 
-private fun section( ini: Ini, name: String ): Profile.Section =
-    ini.getOrElse(name) { throw InvalidDefinitionException("Missing section $name") }
+private fun section(ini: Ini, name: String): Profile.Section =
+        ini.getOrElse(name) { throw InvalidDefinitionException("Missing section $name") }
 
-private inline fun <reified T> value( section: Profile.Section, name: String ): T {
-    return section.get( name, T::class.java ) ?:
-        throw InvalidDefinitionException("Missing property $name in section ${section.name}")
+private inline fun <reified T> value(section: Profile.Section, name: String): T {
+    return section.get(name, T::class.java)
+            ?: throw InvalidDefinitionException("Missing property $name in section ${section.name}")
 }
 
 private fun String.toColumnReference(): Int {
     val int = toIntOrNull()
-    return if (int != null) int-1 else fold(0) { result, c -> (result * 26) + c.toInt() - 'A'.toInt() }
+    return if (int != null) int - 1 else fold(0) { result, c -> (result * 26) + c.code - 'A'.code }
 }
 
-fun parseSourceStructure( input: InputStream ): SourceStructure {
-    val ini = Ini( InputStreamReader(input, "UTF-8") )
+fun parseSourceStructure(input: InputStream): SourceStructure {
+    val ini = Ini(InputStreamReader(input, "UTF-8"))
 
     val mainSection = section(ini, MAIN_SECTION)
-    val type = SourceType.valueOf( value<String>(mainSection, TYPE_PROPERTY).capitalize() )
+    val type = SourceType.valueOf(value<String>(mainSection, TYPE_PROPERTY)
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
     val name = value<String>(mainSection, ACCOUNT_NAME)
     val startRow = value<Int>(mainSection, START_ROW_PROPERTY) - 1
-    val endRow = if (mainSection.containsKey(END_ROW_PROPERTY))
-                    mainSection.get(END_ROW_PROPERTY, Int::class.java)-1
-                else null
+    val endRow =
+            if (mainSection.containsKey(END_ROW_PROPERTY)) mainSection.get(END_ROW_PROPERTY, Int::class.java) - 1
+            else null
     val dateColumn = value<String>(mainSection, DATE_COLUMN_PROPERTY).toColumnReference()
     val dateFormat = value<String>(mainSection, DATE_FORMAT_PROPERTY)
     val memoColumn = value<String>(mainSection, MEMO_COLUMN_PROPERTY).toColumnReference()
@@ -69,5 +71,5 @@ fun parseSourceStructure( input: InputStream ): SourceStructure {
             memoColumn, amountColumn, balanceColumn, categories)
 }
 
-fun parseSourceStructure( input: File ): SourceStructure =
+fun parseSourceStructure(input: File): SourceStructure =
         FileInputStream(input).use { stream -> parseSourceStructure(stream) }

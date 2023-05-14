@@ -65,7 +65,7 @@ class AccountsLoader( private val printer: Printer) {
 
     private fun reportMismatchingBalances(account: Account) {
         val mismatchingBalances = account.mismatchingBalances
-        if ( !mismatchingBalances.isEmpty() ) {
+        if (mismatchingBalances.isNotEmpty()) {
             val formatted = mismatchingBalances.
                     joinToString("\n   ") { pair ->
                         val expected = pair.first.balance + pair.second.amount
